@@ -5,6 +5,9 @@ import * as dotenv from "dotenv";
 dotenv.config();
 const port = process.env.PORT || 5000;
 
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
 const startApp = async () => {
     await runDB();
     app.listen(port, () => {
