@@ -1,9 +1,10 @@
-import {TodolistType, OutputBlogType} from "../types/blog/output";
+import {TodolistType, OutputTodolistType} from "../types/todolist/output";
 import {ObjectId, WithId} from "mongodb";
-import {CreateBlogDto, SortDataType} from "../types/blog/input";
-import {todolistMapper} from "../types/blog/mapper";
+import {CreateTodolistDto, SortDataType, UpdateTodolistDto} from "../types/todolist/input";
+import {todolistMapper} from "../types/todolist/mapper";
 import {taskCollection, todolistCollection} from "../db";
-import {taskMapper} from "../types/post/mapper";
+import {taskMapper} from "../types/task/mapper";
+import {TaskType} from "../types/task/output";
 
 
 export class TodolistRepository {
@@ -27,20 +28,12 @@ export class TodolistRepository {
             }
         }
 
-        const todolists: WithId<TodolistType>[] = await todolistCollection.find(
-            // {
-            filter
-            // }
-        )
+        const todolists: WithId<TodolistType>[] = await todolistCollection.find(filter)
             .sort(sortBy, sortDirection)
             .skip((+pageNumber - 1) * +pageSize)
             .limit(+pageSize)
             .toArray()
 
-        const totalCount = await todolistCollection
-            .countDocuments(filter)
-
-        const pageCount = Math.ceil(totalCount / +pageSize)
 
         return {
             items: todolists.map(todolistMapper)
@@ -50,14 +43,13 @@ export class TodolistRepository {
     }
 
 
-    static async getPostsByBlogId(todolistId: string, sortData: any) {
+    static async getTaskByTodolistId(todolistId: string) {
 
         const tasks = await taskCollection.find({todolistId: todolistId}).toArray()
 
         if (!tasks) {
             return null
         }
-        console.log(tasks,'tasks')
         return {
            items: tasks.map(taskMapper)
         }
@@ -66,10 +58,8 @@ export class TodolistRepository {
 
     }
 
-    static async createPostToBlog(todolistId: string, taskData: any) {
-        const todolist = await this.getTodolistById(todolistId)
-
-        const task: any = {
+    static async createTaskToTodolist(todolistId: string, taskData: UpdateTodolistDto) {
+        const task: TaskType = {
             title: taskData.title,
             todolistId: todolistId,
             status:0,
@@ -80,7 +70,7 @@ export class TodolistRepository {
         return res.insertedId
     }
 
-    static async getTodolistById(id: string): Promise<OutputBlogType | null> {
+    static async getTodolistById(id: string): Promise<OutputTodolistType | null> {
         try {
             const blog: WithId<TodolistType> | null = await todolistCollection.findOne({_id: new ObjectId(id)})
             if (!blog) {
@@ -93,59 +83,10 @@ export class TodolistRepository {
 
     }
 
-    // static async getBlogById(id: string,sortData:any): Promise<any | null> {
-    //     const sortDirection = sortData.sortDirection ?? 'desc'
-    //     const sortBy = sortData.sortBy ?? 'createdAt'
-    //     const searchNameTerm = sortData.searchNameTerm ?? null
-    //     const pageSize = sortData.pageSize ?? 10
-    //     const pageNumber = sortData.pageNumber ?? 1
-    //
-    //     let filter = {}
-    //
-    //     if (searchNameTerm) {
-    //         filter = {
-    //             name: {
-    //                 $regex: searchNameTerm,
-    //                 $options: 'i'
-    //             }
-    //         }
-    //     }
-    //
-    //     const blogs: WithId<BlogType>[] = await blogCollection.find({filter})
-    //         .sort(sortBy, sortDirection)
-    //         .skip((+pageNumber - 1) * +pageSize)
-    //         .limit(+pageSize)
-    //         .toArray()
-    //
-    //     const totalCount = await blogCollection
-    //         .countDocuments(filter)
-    //
-    //     const pageCount = Math.ceil(totalCount / +pageSize)
-    //
-    //     return {
-    //         pagesCount:pageCount,
-    //         pageNumber:pageNumber,
-    //         pageSize:+pageSize,
-    //         totalCount:+totalCount,
-    //         items:blogs.map(blogMapper)
-    //     }
-    //         try {
-    //             const blog: any = await blogCollection.findOne({_id: new ObjectId(id)})
-    //             if (!blog) {
-    //
-    //                 return null
-    //             }
-    //             return blogMapper(blog)
-    //         } catch (err) {
-    //             return null
-    //         }
-    //
-    // }
-//
-    static async createBlog(title: any) {
+    static async createTodolist(title: any) {
 
         const createdAt = new Date()
-        const newTodolist: any = {
+        const newTodolist: TodolistType = {
             title,
             addedDate: createdAt.toISOString(),
 
@@ -156,23 +97,18 @@ export class TodolistRepository {
 
     }
 
-// }
 
-
-    static async updateBlog(id: string, data: any) {
-
+    static async updateTodolist(id: string, data: UpdateTodolistDto) {
 
         let result = await todolistCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {
                 title: data.title,
-                // description: data.description,
-                // websiteUrl: data.websiteUrl,
             }
         })
         return result.matchedCount === 1
     }
 
-    static async deleteBlog(id: string) {
+    static async deleteTodolist(id: string) {
         try {
             const result = await todolistCollection.deleteOne({_id: new ObjectId(id)})
             return result.deletedCount === 1
@@ -182,18 +118,6 @@ export class TodolistRepository {
 
     }
 
-//     static async deleteAllBlogs() {
-//
-//         const result = await todolistCollection.deleteMany({})
-//
-//         return !!result.deletedCount
-//     }
 
 }
 
-//
-// export function generateUniqueId(): string {
-//     const fullUUID = uuidv4();
-//     return fullUUID.slice(0, 28);
-// }
-//

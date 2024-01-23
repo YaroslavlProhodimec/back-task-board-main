@@ -1,13 +1,11 @@
-export type OutputBlogType = {
+export type OutputTodolistType = {
     id:string
     addedDate:string,
     title: string,
 }
 export type TodolistType = {
-    id:string
+    // id:string
     addedDate:string
-    websiteUrl:string
-    order: number
     title: boolean
 }
 

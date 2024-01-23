@@ -1,6 +1,6 @@
 import {WithId} from "mongodb";
-import {TodolistType, OutputBlogType} from "./output";
-import {OutputPostType, PostType} from "../post/output";
+import {TodolistType, OutputTodolistType} from "./output";
+import {OutputTaskType, TaskType} from "../task/output";
 
 export const todolistMapper = (todo:WithId<TodolistType>):any => {
     return {

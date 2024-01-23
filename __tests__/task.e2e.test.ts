@@ -36,7 +36,7 @@
 //             email: "yar.muratowww@gmail.com",
 //         };
 //         const createdUser = await request(app)
-//             .post("/users")
+//             .task("/users")
 //             .set("Authorization", `Basic ${correctAuthToken}`)
 //             .send(userCredentials)
 //             .expect(StatusCodes.CREATED);

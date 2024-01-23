@@ -1,26 +1,17 @@
-import { Db, MongoClient } from "mongodb";
-import { PostDBType } from "./dto/postsDTO/PostModel";
+import { MongoClient } from "mongodb";
 import * as dotenv from "dotenv";
-import { BlogDBType } from "./dto/blogsDTO/BlogModel";
-import { UserDBType } from "./dto/usersDTO/usersDTO";
-import { CommentDBType } from "./dto/commentsDTO/commentsDTO";
-import { RefreshTokensBlacklistDB } from "./dto/authDTO/authDTO";
-import {TodolistType} from "./types/blog/output";
-import {PostType} from "./types/post/output";
+import {TodolistType} from "./types/todolist/output";
+import {TaskType} from "./types/task/output";
 dotenv.config();
 export const mongoURI = process.env.MONGO_URL
 
 export const client = new MongoClient(mongoURI as string);
 
-const dbName = "blogs-posts";
 export const dbBlogs = client.db('node-blogs')
 
 export const todolistCollection = dbBlogs.collection<TodolistType>('todolists')
-export const taskCollection = dbBlogs.collection<PostType>('task')
-export const commentsCollection = dbBlogs.collection('comments')
-export const usersCollection = dbBlogs.collection<any>('users')
-export const refreshTokensBlacklistedCollection =
-    dbBlogs.collection<RefreshTokensBlacklistDB>("refresh-tokens-blacklisted");
+export const taskCollection = dbBlogs.collection<TaskType>('task')
+
 
 export const runDB = async () => {
     try {

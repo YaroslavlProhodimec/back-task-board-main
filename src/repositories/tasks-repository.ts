@@ -1,14 +1,14 @@
-import {ObjectId} from "mongodb";
-import {OutputPostType} from "../types/post/output";
-import {taskMapper} from "../types/post/mapper";
-import { UpdatePostDto} from "../types/post/input";
+import {ObjectId, WithId} from "mongodb";
+import {OutputTaskType, TaskType} from "../types/task/output";
+import {taskMapper} from "../types/task/mapper";
+import { UpdatePostDto} from "../types/task/input";
 import {taskCollection} from "../db";
 
 export class TasksRepository {
 
-    static async getPostById(id: string): Promise<OutputPostType | null> {
+    static async getTaskById(id: ObjectId): Promise<OutputTaskType | null> {
         try {
-            const task: any = await taskCollection.findOne({_id: new ObjectId(id)})
+            const task:WithId<TaskType> | null  = await taskCollection.findOne({_id: new ObjectId(id)})
 
             if (!task) {
                 return null
@@ -21,7 +21,7 @@ export class TasksRepository {
     }
 
 
-    static async deletePost(id: string) {
+    static async deleteTask(id: string) {
         try {
             const result = await taskCollection.deleteOne({_id: new ObjectId(id)})
             return result.deletedCount === 1
@@ -30,7 +30,7 @@ export class TasksRepository {
         }
     }
 
-    static async updatePost(id: string, data: UpdatePostDto) {
+    static async updateTask(id: string, data: UpdatePostDto) {
 
         let result = await taskCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {
