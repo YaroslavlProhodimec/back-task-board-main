@@ -97,7 +97,7 @@ export class TodolistRepository {
     }
 
 
-    static async updateTodolist(id: string, data: UpdateTodolistDto) {
+    static async updateTodolist(id: string, data: any) {
 
         let result = await todolistCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {
