@@ -1,6 +1,6 @@
 import {TodolistType, OutputTodolistType} from "../types/todolist/output";
 import {ObjectId, WithId} from "mongodb";
-import {CreateTodolistDto, SortDataType, UpdateTodolistDto} from "../types/todolist/input";
+import { SortDataType, UpdateTodolistDto} from "../types/todolist/input";
 import {todolistMapper} from "../types/todolist/mapper";
 import {taskCollection, todolistCollection} from "../db";
 import {taskMapper} from "../types/task/mapper";
@@ -80,7 +80,6 @@ export class TodolistRepository {
         } catch (err) {
             return null
         }
-
     }
 
     static async createTodolist(title: any) {
