@@ -4,6 +4,7 @@ import cors from 'cors';
 import morgan from "morgan";
 import {StatusCodes} from "http-status-codes";
 import {todolistRoute} from "./routes/todolist-route";
+import {testingRouter} from "./testing-router";
 
 export const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(cors());
 app.use('/todo-lists', todolistRoute)
+app.use('/testing', testingRouter)
 app.use(async (req: Request, res: Response, next: NextFunction) => {
     next(StatusCodes.NOT_FOUND);
 });

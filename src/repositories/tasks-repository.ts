@@ -31,13 +31,20 @@ export class TasksRepository {
     }
 
     static async updateTask(id: string, data: UpdatePostDto) {
-
+        const task:WithId<TaskType> | null  = await taskCollection.findOne({_id: new ObjectId(id)})
+        console.log(data,'data')
+        console.log(task,'task')
         let result = await taskCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {
                 title: data.title,
                 status:data.status
             }
         })
+        console.log(result,'result Update')
+
+        const taskUpdate:WithId<TaskType> | null  = await taskCollection.findOne({_id: new ObjectId(id)})
+
+        console.log(taskUpdate,'taskUpdate')
         return result.matchedCount === 1
     }
 

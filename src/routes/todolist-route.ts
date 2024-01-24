@@ -99,6 +99,8 @@ todolistRoute.put('/:id/tasks/:taskId',
     todolistValidation(),
     async (req: Request<TodolistParams>, res: Response) => {
         const updateData = req.body
+        const params = req.params
+        console.log(params,'params')
         const isUpdated = await TasksRepository.updateTask(req.params.taskId, updateData)
 
         if (isUpdated) {

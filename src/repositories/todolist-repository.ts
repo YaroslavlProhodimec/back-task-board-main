@@ -66,6 +66,8 @@ export class TodolistRepository {
             addedDate: new Date(),
         }
         const res = await taskCollection.insertOne(task)
+        console.log(res.insertedId.toString(),'result.insertedId.toString()')
+        console.log(res.insertedId,'result.insertedId.toString()')
 
         return res.insertedId
     }
